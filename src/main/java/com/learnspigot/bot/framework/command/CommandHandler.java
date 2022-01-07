@@ -33,13 +33,9 @@ public final class CommandHandler extends ListenerAdapter {
     }
 
     private void handleCommand(final @NotNull SlashCommandEvent event) {
-        System.out.println(commandMap);
-        System.out.println(event.getName());
         Map.Entry<String, Map.Entry<Method, Object>> entry =
                 commandMap.entrySet().stream().filter(command -> command.getKey().equalsIgnoreCase(event.getName()))
                         .findFirst().orElse(null);
-
-        System.out.println(entry);
 
         if (entry != null) {
             Method method = entry.getValue().getKey();
