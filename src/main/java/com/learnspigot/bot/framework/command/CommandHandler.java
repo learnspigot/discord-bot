@@ -1,10 +1,7 @@
 package com.learnspigot.bot.framework.command;
 
-import com.learnspigot.bot.LearnSpigotBot;
 import com.learnspigot.bot.LearnSpigotConstant;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,17 +11,16 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class CommandHandler extends ListenerAdapter {
     private final @NotNull JDA jda;
     private final @NotNull Map<String, Map.Entry<Method, Object>> commandMap;
+    private final @NotNull SimpleDateFormat format = new SimpleDateFormat("[HH:mm:ss]");
 
     public CommandHandler(final @NotNull JDA jda) {
         this.jda = jda;
@@ -55,7 +51,7 @@ public final class CommandHandler extends ListenerAdapter {
             }
 
             if (command.log()) {
-                System.out.println(new SimpleDateFormat("[HH:mm:ss]").format(new Date()) +
+                System.out.println(format.format(new Date()) +
                         " [LOG]: " + info.author().getAsTag() + " executed "
                         + info.message());
             }
