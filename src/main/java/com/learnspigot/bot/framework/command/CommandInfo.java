@@ -48,7 +48,7 @@ public final class CommandInfo {
     }
 
     public @NotNull String message() {
-        return event.getName() + " " + event.getOptions().get(0).getAsString();
+        return "/" + event.getName() + " " + event.getOptions().get(0).getAsString();
     }
 
     public @NotNull String[] args() {

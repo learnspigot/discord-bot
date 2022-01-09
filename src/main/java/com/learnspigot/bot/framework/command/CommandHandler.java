@@ -1,7 +1,7 @@
 package com.learnspigot.bot.framework.command;
 
+import com.learnspigot.bot.LearnSpigotBot;
 import com.learnspigot.bot.LearnSpigotConstant;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,14 +18,14 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class CommandHandler extends ListenerAdapter {
-    private final @NotNull JDA jda;
+    private final @NotNull LearnSpigotBot bot;
     private final @NotNull Map<String, Map.Entry<Method, Object>> commandMap;
     private final @NotNull SimpleDateFormat format = new SimpleDateFormat("[HH:mm:ss]");
 
-    public CommandHandler(final @NotNull JDA jda) {
-        this.jda = jda;
+    public CommandHandler(final @NotNull LearnSpigotBot bot) {
+        this.bot = bot;
         this.commandMap = new ConcurrentHashMap<>();
-        jda.addEventListener(this);
+        bot.jda().addEventListener(this);
     }
 
     private void handleCommand(final @NotNull SlashCommandEvent event) {
@@ -93,7 +93,7 @@ public final class CommandHandler extends ListenerAdapter {
         if (!optionData.isEmpty()) {
             commandData.addOptions(optionData);
         }
-        Guild guild = jda.getGuildById(((long) LearnSpigotConstant.GUILD_ID.get()));
+        Guild guild = bot.jda().getGuildById(((long) LearnSpigotConstant.GUILD_ID.get()));
         assert guild != null;
         guild.upsertCommand(commandData).queue(upsertCommand -> {
             if (command.roleId() != 0) {
