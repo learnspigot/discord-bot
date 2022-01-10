@@ -1,24 +1,32 @@
 # `learnspigot-bot`
 Discord bot for LearnSpigot.
 
-## Requirements
+## Features
 - Lookup Lectures
 - Verify Udemy Account
-- Commission Request/Offer
+- Commissions
 - Suggestions
 - Wix Stocks
 
 ### Lookup Lectures
-Usage `/lecture <name>`<br>
-Allow a user to search for a lecture from Udemy.
+Usage `/lecture <title>`<br>
+Allows a user to search for a lecture from Udemy.
+
+### Lookup Quizzes
+Usage `/quiz <title>`<br>
+Allows a user to search for a quiz from Udemy.
 
 ### Verify Udemy Account
 Usage `/verify <profile-url>`<br>
-Allow a user to verify their Udemy profile (assuming it's public), to grant them access to the rest of the Discord.
+Allows a user to verify their Udemy profile (assuming it's public), to grant them access to the rest of the Discord.
 
-### Commission Request/Offer
-Request usage `/request <content>`<br>
-Allow a user to make a request in #commission.
+### Commission
+Request usage `/request <info> [image]`<br>
+Allows a user to make a request in #commissions.
 
-Offer usage `/offer <content>`<br>
-Allow a user to make an offer in #commission.
+Offer usage `/offer <info> [image]`<br>
+Allows a user to make an offer in #commissions.
+
+### Suggestion
+Request usage `/suggest <idea>`<br>
+Allows a user to make a suggestion in #suggestions.
