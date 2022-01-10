@@ -33,10 +33,11 @@ public final class ProfileData {
     }
 
     private void removeIfExists(final long id) {
+        JsonArray data = this.data.deepCopy();
         data.forEach(jsonElement -> {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             if (jsonObject.get("id").getAsLong() == id) {
-                data.remove(jsonElement);
+                this.data.remove(jsonElement);
             }
         });
     }

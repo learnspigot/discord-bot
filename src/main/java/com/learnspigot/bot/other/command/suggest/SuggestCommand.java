@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -25,10 +26,25 @@ public final class SuggestCommand {
             return;
         }
 
+        String description = String.join(" ", info.args());
+        char[] lol = new char[description.toCharArray().length];
+        char last = ' ';
+        int i = 0;
+        for (char c : description.toLowerCase().toCharArray()) {
+            lol[i] = c;
+            if (last == '\\' && c == 'n') {
+                lol[i-1] = '/';
+                lol[i] = '%';
+            }
+            last = c;
+            i++;
+        }
+        description = new String(lol).replaceAll("/%", "\n");
+
         info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
                 .setTitle("Suggestion")
-                .setDescription(String.join(" ", info.args()))
+                .setDescription(description)
                 .addField("Submitted by", info.author().getAsMention(), false)
                 .build()
         ).queue(message -> {

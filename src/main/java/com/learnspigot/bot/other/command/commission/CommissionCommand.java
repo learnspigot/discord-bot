@@ -25,10 +25,25 @@ public final class CommissionCommand {
             return;
         }
 
+        String description = String.join(" ", info.optionData().get(0).getAsString());
+        char[] lol = new char[description.toCharArray().length];
+        char last = ' ';
+        int i = 0;
+        for (char c : description.toLowerCase().toCharArray()) {
+            lol[i] = c;
+            if (last == '\\' && c == 'n') {
+                lol[i-1] = '/';
+                lol[i] = '%';
+            }
+            last = c;
+            i++;
+        }
+        description = new String(lol).replaceAll("/%", "\n");
+
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.decode("#FA7FFF"))
                 .setTitle("Offer")
-                .setDescription(String.join(" ", info.optionData().get(0).getAsString()))
+                .setDescription(description)
                 .addField("Offer by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 
@@ -53,10 +68,25 @@ public final class CommissionCommand {
             return;
         }
 
+        String description = String.join(" ", info.optionData().get(0).getAsString());
+        char[] lol = new char[description.toCharArray().length];
+        char last = ' ';
+        int i = 0;
+        for (char c : description.toLowerCase().toCharArray()) {
+            lol[i] = c;
+            if (last == '\\' && c == 'n') {
+                lol[i-1] = '/';
+                lol[i] = '%';
+            }
+            last = c;
+            i++;
+        }
+        description = new String(lol).replaceAll("/%", "\n");
+
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.decode("#9D7FFF"))
                 .setTitle("Request")
-                .setDescription(String.join(" ", info.optionData().get(0).getAsString()))
+                .setDescription(description)
                 .addField("Request by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 

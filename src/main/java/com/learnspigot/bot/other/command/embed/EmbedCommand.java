@@ -36,16 +36,28 @@ public final class EmbedCommand {
             return;
         }
 
-        String thumbnail = info.optionData().get(5).getAsString();
+        String description = String.join(" ", info.optionData().get(3).getAsString());
+        char[] lol = new char[description.toCharArray().length];
+        char last = ' ';
+        int i = 0;
+        for (char c : description.toLowerCase().toCharArray()) {
+            lol[i] = c;
+            if (last == '\\' && c == 'n') {
+                lol[i-1] = '/';
+                lol[i] = '%';
+            }
+            last = c;
+            i++;
+        }
+        description = new String(lol).replaceAll("/%", "\n");
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(color)
                 .setTitle(info.optionData().get(2).getAsString())
-                .setDescription(info.optionData().get(3).getAsString())
-                .setFooter(info.optionData().get(4).getAsString());
+                .setDescription(description);
 
-        if (!thumbnail.isEmpty() && thumbnail.matches(LearnSpigotConstant.VALID_LINK_REGEX.get())) {
-            embed.setThumbnail(thumbnail);
+        if (info.optionData().size() == 5 && info.optionData().get(4).getAsString().matches(LearnSpigotConstant.VALID_LINK_REGEX.get())) {
+            embed.setThumbnail(info.optionData().get(4).getAsString());
         }
 
         info.event().getHook().sendMessageEmbeds(new EmbedBuilder()

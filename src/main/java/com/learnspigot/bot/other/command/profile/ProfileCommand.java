@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public record ProfileCommand(@NotNull VerificationHandler verificationHandler) {
-    @Command(label = "profile", usage = "/profile <mentioned-user>", description = "View a user's linked Udemy account.", roleId = 749450748244394094L, log = true)
+    @Command(label = "profile", usage = "/profile <mentioned-user>", description = "View a user's linked Udemy account.", roleId = 0L, log = true)
     public void onProfileCommand(final @NotNull CommandInfo info) {
         Member member = info.optionData().get(0).getAsMember();
         if (member == null) {

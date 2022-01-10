@@ -51,8 +51,7 @@ public final class CommandHandler extends ListenerAdapter {
             }
 
             if (command.log()) {
-                System.out.println(format.format(new Date()) +
-                        " [LOG]: " + info.author().getAsTag() + " executed "
+                System.out.println(format.format(new Date()) + " [LOG]: " + info.author().getAsTag() + " executed "
                         + info.message());
             }
         }
