@@ -20,7 +20,7 @@ public final class WixStockCommand {
         }
 
         if (wixStock == null) {
-            info.event().replyEmbeds(new EmbedBuilder()
+            info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
                     .setDescription("Unable to fetch Wix stock information.")
@@ -29,7 +29,7 @@ public final class WixStockCommand {
             return;
         }
 
-        info.event().replyEmbeds(new EmbedBuilder()
+        info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
                 .setTitle("Wix Stock")
                 .addField("Current Value (USD)", "$" + wixStock.getPrice(), false)
