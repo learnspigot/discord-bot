@@ -1,40 +1,46 @@
 package com.learnspigot.bot.verification.command;
 
+import com.learnspigot.bot.LearnSpigotConstant;
 import com.learnspigot.bot.framework.command.Command;
 import com.learnspigot.bot.framework.command.CommandInfo;
 import com.learnspigot.bot.verification.VerificationHandler;
 import com.learnspigot.bot.verification.profile.VerificationProfile;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
-    private static final String urlPattern = "^(?:(?:(?:https?|ftp):)?\\/\\/)(?:\\S+(?::\\S*)?@)?(?:(?!(?:10|127)(?:\\.\\d{1,3}){3})(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z0-9\\u00a1-\\uffff][a-z0-9\\u00a1-\\uffff_-]{0,62})?[a-z0-9\\u00a1-\\uffff]\\.)+(?:[a-z\\u00a1-\\uffff]{2,}\\.?))(?::\\d{2,5})?(?:[/?#]\\S*)?$";
-
-    @Command(label = "verify", usage = "/verify <url>", description = "Use this command to verify you own the course.", log = true)
+    @Command(label = "verify", usage = "/verify <url>", description = "Verify you own the course.", log = true)
     public void onVerifyCommand(final @NotNull CommandInfo info) {
-        if (!info.args()[0].matches(urlPattern) || !info.args()[0].contains("udemy.com/user/")) {
+        if (!info.args()[0].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[0].contains("udemy.com/user/")) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
-        if (verificationHandler.urlExists(info.author().getIdLong(), info.args()[0])) {
+        if (verificationHandler.urlExists(info.author().getIdLong(), info.args()[0]) != null) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("This Udemy account is already linked.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
@@ -44,49 +50,175 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
         } catch (FileNotFoundException e) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (NumberFormatException e) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please make sure that you display your courses on your profile in privacy settings.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (IOException e) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
-                            .setDescription("We couldn't verify that you own the course. If this is a mistake, please ping a Specialist.")
+                            .setDescription("We couldn't verify that you own the course.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         if (!profile.verified()) {
             info.event().replyEmbeds(
                     new EmbedBuilder()
-                            .setColor(Color.RED)
+                            .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
-                            .setDescription("We couldn't verify that you own the course. If this is a mistake, please ping a Specialist.")
+                            .setDescription("We couldn't verify that you own the course.")
+                            .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue();
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         info.event().replyEmbeds(
                 new EmbedBuilder()
-                        .setColor(Color.GREEN)
+                        .setColor(Color.decode("#89F27B"))
                         .setTitle("Verified")
                         .setDescription("Welcome to the course!")
                         .build()
+        ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+        TextChannel channel = Objects.requireNonNull(info.event().getGuild()).getTextChannelById((long)
+                LearnSpigotConstant.CHANNEL_GENERAL_ID.get());
+        assert channel != null;
+
+        channel.sendMessageEmbeds(new EmbedBuilder()
+                .setColor(Color.decode("#EE8917"))
+                .setTitle("Welcome")
+                .setDescription("Please welcome " + info.author().getAsMention() + " as a student! ❤")
+                .build()
         ).queue();
+        channel.sendMessage(info.author().getAsMention()).queue(message -> message.delete().queue());
+    }
+
+    @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 749450748244394094L, log = true)
+    public void onVerifyOtherCommand(final @NotNull CommandInfo info) {
+        if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("Please enter a valid public profile url.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        }
+
+        Member member = info.optionData().get(0).getAsMember();
+        if (member == null) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("Please mention a valid user.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        }
+
+        User user = member.getUser();
+
+        VerificationProfile potentialProfile = verificationHandler.urlExists(user.getIdLong(), info.args()[1]);
+        if (potentialProfile != null) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("This Udemy account is already linked to " + Objects.requireNonNull(
+                                    verificationHandler.bot().jda().getUserById(potentialProfile.id())).getAsMention()
+                                    + ".")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        }
+
+        VerificationProfile profile;
+        try {
+            profile = verificationHandler.verify(user, info.args()[1]);
+        } catch (FileNotFoundException e) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("Please enter a valid public profile url.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        } catch (NumberFormatException e) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("Please make sure that " + user.getAsMention() + " displays their courses on their profile in privacy settings.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        } catch (IOException e) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("We couldn't verify that " + user.getAsMention() + " owns the course.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        }
+
+        if (!profile.verified()) {
+            info.event().replyEmbeds(
+                    new EmbedBuilder()
+                            .setColor(Color.decode("#E95151"))
+                            .setTitle("Error")
+                            .setDescription("We couldn't verify that " + user.getAsMention() + " owns the course.")
+                            .addField("Confused?", "You shouldn't be, you're staff.", false)
+                            .build()
+            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            return;
+        }
+
+        info.event().replyEmbeds(
+                new EmbedBuilder()
+                        .setColor(Color.decode("#89F27B"))
+                        .setTitle("Verified")
+                        .setDescription("Welcome to the course!")
+                        .build()
+        ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+        TextChannel channel = Objects.requireNonNull(info.event().getGuild()).getTextChannelById((long)
+                LearnSpigotConstant.CHANNEL_GENERAL_ID.get());
+        assert channel != null;
+
+        channel.sendMessageEmbeds(new EmbedBuilder()
+                .setColor(Color.decode("#EE8917"))
+                .setTitle("Welcome")
+                .setDescription("Please welcome " + user.getAsMention() + " as a student! ❤")
+                .build()
+        ).queue();
+        channel.sendMessage(user.getAsMention()).queue(message -> message.delete().queue());
     }
 }

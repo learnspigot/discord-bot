@@ -83,8 +83,9 @@ public final class CommandHandler extends ListenerAdapter {
         String[] args = command.usage().split(" ");
         List<OptionData> optionData = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
-            optionData.add(new OptionData(OptionType.STRING, args[i].substring(1, args[i].length()-1),
-                    args[i].substring(1, args[i].length()-1), args[i].startsWith("<")));
+            OptionType optionType = args[i].contains("mentioned-user") ? OptionType.USER : OptionType.STRING;
+            optionData.add(new OptionData(optionType, args[i].substring(1, args[i].length() - 1),
+                    args[i].substring(1, args[i].length() - 1), args[i].startsWith("<")));
         }
 
         CommandData commandData = new CommandData(label, command.description());

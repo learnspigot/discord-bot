@@ -1,7 +1,7 @@
 package com.learnspigot.bot.verification.profile;
 
 import com.learnspigot.bot.LearnSpigotConstant;
-import com.learnspigot.bot.verification.udemy.account.UdemyAccount;
+import com.learnspigot.bot.udemy.account.UdemyAccount;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

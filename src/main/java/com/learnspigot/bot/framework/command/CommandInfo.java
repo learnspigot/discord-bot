@@ -1,20 +1,21 @@
 package com.learnspigot.bot.framework.command;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public final class CommandInfo {
     private final @NotNull CommandHandler handler;
     private final @NotNull SlashCommandEvent event;
     private final @NotNull String usage;
-    private @Nullable OptionData[] optionData;
 
     public CommandInfo(final @NotNull CommandHandler handler, final @NotNull SlashCommandEvent event,
                        final @NotNull String usage) {
@@ -35,12 +36,8 @@ public final class CommandInfo {
         return usage;
     }
 
-    public @Nullable OptionData[] optionData() {
-        return optionData;
-    }
-
-    public void optionData(@NotNull OptionData[] optionData) {
-        this.optionData = optionData;
+    public @NotNull List<OptionMapping> optionData() {
+        return event.getOptions();
     }
 
     public @NotNull MessageChannel channel() {
@@ -48,7 +45,15 @@ public final class CommandInfo {
     }
 
     public @NotNull String message() {
-        return "/" + event.getName() + " " + event.getOptions().get(0).getAsString();
+        return "/" + event.getName() + " " + buildMessage();
+    }
+
+    private @NotNull String buildMessage() {
+        StringBuilder builder = new StringBuilder();
+        for (OptionMapping option : event.getOptions()) {
+            builder.append(option.getAsString()).append(" ");
+        }
+        return builder.toString();
     }
 
     public @NotNull String[] args() {
@@ -62,6 +67,10 @@ public final class CommandInfo {
 
     public @Nullable Member member() {
         return event.getMember();
+    }
+
+    public @NotNull JDA jda() {
+        return event.getJDA();
     }
 
     @Override
