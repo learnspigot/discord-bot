@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public final class CommissionCommand {
     @Command(label = "offer", usage = "/offer <info> [image]", description = "Post an offer in #commission!", log = true)
@@ -20,21 +21,19 @@ public final class CommissionCommand {
                                     .getTextChannelById(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get()))
                             .getAsMention() + ".")
                     .build()
-            ).queue();
+            ).queue(message -> message.delete().queueAfter(5L, TimeUnit.SECONDS));
             return;
         }
 
-        String description = String.join(" ", info.args());
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.decode("#FA7FFF"))
                 .setTitle("Offer")
-                .setDescription(description)
+                .setDescription(String.join(" ", info.optionData().get(0).getAsString()))
                 .addField("Offer by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 
-        if (info.args().length == 2) {
-            embed.setDescription(description.replaceAll(info.args()[1], ""));
-            embed.setImage(info.args()[1]);
+        if (info.args().length >= 2) {
+            embed.setImage(info.optionData().get(1).getAsString());
         }
 
         info.event().getHook().sendMessageEmbeds(embed.build()).queue();
@@ -50,21 +49,19 @@ public final class CommissionCommand {
                                     .getTextChannelById(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get()))
                             .getAsMention() + ".")
                     .build()
-            ).queue();
+            ).queue(message -> message.delete().queueAfter(5L, TimeUnit.SECONDS));
             return;
         }
 
-        String description = String.join(" ", info.args());
         EmbedBuilder embed = new EmbedBuilder()
                 .setColor(Color.decode("#9D7FFF"))
                 .setTitle("Request")
-                .setDescription(description)
+                .setDescription(String.join(" ", info.optionData().get(0).getAsString()))
                 .addField("Request by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 
-        if (info.args().length == 2) {
-            embed.setDescription(description.replaceAll(info.args()[1], ""));
-            embed.setImage(info.args()[1]);
+        if (info.args().length >= 2) {
+            embed.setImage(info.optionData().get(1).getAsString());
         }
 
         info.event().getHook().sendMessageEmbeds(embed.build()).queue();

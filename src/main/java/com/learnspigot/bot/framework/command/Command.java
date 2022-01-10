@@ -16,7 +16,7 @@ public @interface Command {
 
     String description() default "";
 
-    long roleId() default 0;
+    long roleId() default 0L;
 
     boolean log() default false;
 }

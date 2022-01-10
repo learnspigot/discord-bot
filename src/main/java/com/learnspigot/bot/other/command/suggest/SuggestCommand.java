@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public final class SuggestCommand {
     @Command(label = "suggest", usage = "/suggest <idea>", description = "Create a suggestion that everyone can vote on!", log = true)
@@ -20,7 +21,7 @@ public final class SuggestCommand {
                                     .getTextChannelById((LearnSpigotConstant.CHANNEL_SUGGESTIONS_ID.get())))
                             .getAsMention() + "."))
                     .build()
-            ).queue();
+            ).queue(message -> message.delete().queueAfter(5L, TimeUnit.SECONDS));
             return;
         }
 

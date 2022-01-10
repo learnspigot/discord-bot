@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public final class VerificationHandler {
@@ -60,6 +61,10 @@ public final class VerificationHandler {
             profileData.cache(verificationProfile);
         }
         return verificationProfile;
+    }
+
+    public @NotNull Optional<VerificationProfile> profile(final long id) {
+        return profiles.stream().filter(profile -> profile.id() == id).findFirst();
     }
 
     public void forceVerify(final @NotNull User user) {

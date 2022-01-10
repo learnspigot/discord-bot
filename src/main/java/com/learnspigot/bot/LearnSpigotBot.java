@@ -2,6 +2,8 @@ package com.learnspigot.bot;
 
 import com.learnspigot.bot.framework.command.CommandHandler;
 import com.learnspigot.bot.other.command.commission.CommissionCommand;
+import com.learnspigot.bot.other.command.embed.EmbedCommand;
+import com.learnspigot.bot.other.command.profile.ProfileCommand;
 import com.learnspigot.bot.other.command.suggest.SuggestCommand;
 import com.learnspigot.bot.other.command.wixstock.WixStockCommand;
 import com.learnspigot.bot.udemy.lecture.UdemyLectureHandler;
@@ -30,7 +32,8 @@ public final class LearnSpigotBot {
         verificationHandler = new VerificationHandler(this);
         udemyLectureHandler = new UdemyLectureHandler(this);
 
-        commandHandler.registerCommands(new CommissionCommand(), new SuggestCommand(), new WixStockCommand());
+        commandHandler.registerCommands(new CommissionCommand(), new SuggestCommand(), new WixStockCommand(),
+                new ProfileCommand(verificationHandler), new EmbedCommand());
 
         preventTalking();
     }
@@ -39,12 +42,16 @@ public final class LearnSpigotBot {
         jda.addEventListener(new ListenerAdapter() {
             @Override
             public void onMessageReceived(final @NotNull MessageReceivedEvent event) {
-                if ((event.getChannel().getId().equalsIgnoreCase(LearnSpigotConstant.CHANNEL_SUGGESTIONS_ID.get())
-                        && event.getMessage().getContentRaw().startsWith("/suggest"))
-                        ||
-                        (event.getChannel().getId().equalsIgnoreCase(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get())
-                                && (event.getMessage().getContentRaw().startsWith("/request")
-                                || event.getMessage().getContentRaw().startsWith("/offer")))) {
+                boolean suggestionsChannel = event.getChannel().getId().equals(LearnSpigotConstant.CHANNEL_SUGGESTIONS_ID.get());
+                boolean suggestCommand = event.getMessage().getContentRaw().startsWith("/suggest")
+                        || event.getMessage().getContentRaw().equals("");
+                boolean commissionsChannel = event.getChannel().getId().equals(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get());
+                boolean requestOrOfferCommand = event.getMessage().getContentRaw().startsWith("/request")
+                        || event.getMessage().getContentRaw().startsWith("/offer")
+                        || event.getMessage().getContentRaw().equals("");
+
+                if ((suggestionsChannel && !suggestCommand) || (commissionsChannel && !requestOrOfferCommand)) {
+                    System.out.println("gottem");
                     event.getMessage().delete().queue();
                 }
             }
