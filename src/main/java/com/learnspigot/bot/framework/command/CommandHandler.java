@@ -83,10 +83,24 @@ public final class CommandHandler extends ListenerAdapter {
         String[] args = command.usage().split(" ");
         List<OptionData> optionData = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
-            OptionType optionType = args[i].contains("mentioned-user") ? OptionType.USER : OptionType.STRING;
+            OptionType optionType;
+
+            if (args[i].contains("mentioned-user")) {
+                optionType = OptionType.USER;
+            } else if (args[i].contains("channel")) {
+                optionType = OptionType.CHANNEL;
+            } else if (args[i].contains("role")) {
+                optionType = OptionType.ROLE;
+            } else {
+                optionType = OptionType.STRING;
+            }
+
             optionData.add(new OptionData(optionType, args[i].substring(1, args[i].length() - 1),
                     args[i].substring(1, args[i].length() - 1), args[i].startsWith("<")));
         }
+
+        System.out.println(label);
+        System.out.println(command);
 
         CommandData commandData = new CommandData(label, command.description());
         commandData.setDefaultEnabled(command.roleId() == 0);
@@ -102,10 +116,12 @@ public final class CommandHandler extends ListenerAdapter {
                         new CommandPrivilege(CommandPrivilege.Type.ROLE, true, command.roleId())).queue();
             }
         });
+        guild.retrieveCommands().queue((System.out::println));
     }
 
     @Override
     public void onSlashCommand(final @NotNull SlashCommandEvent event) {
+        event.deferReply().queue();
         handleCommand(event);
     }
 

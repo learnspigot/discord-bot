@@ -13,7 +13,7 @@ public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler
     @Command(label = "quiz", usage = "/quiz <title>", description = "Search for a quiz.", log = true)
     public void onQuizCommand(final @NotNull CommandInfo info) {
         if (udemyLectureHandler.udemyQuizzes().isEmpty()) {
-            info.event().replyEmbeds(new EmbedBuilder()
+            info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
                     .setDescription("We're currently indexing quizzes. Please try again later.")
@@ -24,7 +24,7 @@ public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler
 
         UdemyQuiz udemyQuiz = udemyLectureHandler().searchQuiz(String.join(" ", info.args()));
         if (udemyQuiz.id() == 0L) {
-            info.event().replyEmbeds(new EmbedBuilder()
+            info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
                     .setDescription("Our search engine is pretty flexible, but no quizzes matched your search term. Sorry :(")
@@ -33,7 +33,7 @@ public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler
             return;
         }
 
-        info.event().replyEmbeds(new EmbedBuilder()
+        info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
                 .setTitle(udemyQuiz.title())
                 .setDescription("To pass this you need to get at least " + udemyQuiz.passPercentage() + "%")

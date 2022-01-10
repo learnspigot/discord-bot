@@ -13,7 +13,7 @@ public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHand
     @Command(label = "lecture", usage = "/lecture <title>", description = "Search for a lecture.", log = true)
     public void onLectureCommand(final @NotNull CommandInfo info) {
         if (udemyLectureHandler.udemyLectures().isEmpty()) {
-            info.event().replyEmbeds(new EmbedBuilder()
+            info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
                     .setDescription("We're currently indexing lectures. Please try again later.")
@@ -24,7 +24,7 @@ public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHand
 
         UdemyLecture udemyLecture = udemyLectureHandler().searchLecture(String.join(" ", info.args()));
         if (udemyLecture.id() == 0L) {
-            info.event().replyEmbeds(new EmbedBuilder()
+            info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
                     .setDescription("Our search engine is pretty flexible, but no lectures matched your search term. Sorry :(")
@@ -33,7 +33,7 @@ public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHand
             return;
         }
 
-        info.event().replyEmbeds(new EmbedBuilder()
+        info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
                 .setTitle(udemyLecture.title())
                 .setDescription(udemyLecture.description())

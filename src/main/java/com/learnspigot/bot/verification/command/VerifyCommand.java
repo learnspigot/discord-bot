@@ -21,26 +21,26 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
     @Command(label = "verify", usage = "/verify <url>", description = "Verify you own the course.", log = true)
     public void onVerifyCommand(final @NotNull CommandInfo info) {
         if (!info.args()[0].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[0].contains("udemy.com/user/")) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         if (verificationHandler.urlExists(info.author().getIdLong(), info.args()[0]) != null) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("This Udemy account is already linked.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
@@ -48,56 +48,56 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
         try {
             profile = verificationHandler.verify(info.author(), info.args()[0]);
         } catch (FileNotFoundException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (NumberFormatException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please make sure that you display your courses on your profile in privacy settings.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (IOException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("We couldn't verify that you own the course.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         if (!profile.verified()) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("We couldn't verify that you own the course.")
                             .addField("Confused?", "If you're stuck or confused, you can ping a Specialist.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
-        info.event().replyEmbeds(
+        info.event().getHook().sendMessageEmbeds(
                 new EmbedBuilder()
                         .setColor(Color.decode("#89F27B"))
                         .setTitle("Verified")
                         .setDescription("Welcome to the course!")
                         .build()
-        ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+        ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
         TextChannel channel = Objects.requireNonNull(info.event().getGuild()).getTextChannelById((long)
                 LearnSpigotConstant.CHANNEL_GENERAL_ID.get());
         assert channel != null;
@@ -114,27 +114,27 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
     @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 749450748244394094L, log = true)
     public void onVerifyOtherCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         Member member = info.optionData().get(0).getAsMember();
         if (member == null) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please mention a valid user.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
@@ -142,7 +142,7 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
 
         VerificationProfile potentialProfile = verificationHandler.urlExists(user.getIdLong(), info.args()[1]);
         if (potentialProfile != null) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
@@ -151,7 +151,7 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
                                     + ".")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
@@ -159,56 +159,56 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
         try {
             profile = verificationHandler.verify(user, info.args()[1]);
         } catch (FileNotFoundException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (NumberFormatException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please make sure that " + user.getAsMention() + " displays their courses on their profile in privacy settings.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         } catch (IOException e) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("We couldn't verify that " + user.getAsMention() + " owns the course.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         if (!profile.verified()) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("We couldn't verify that " + user.getAsMention() + " owns the course.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
-        info.event().replyEmbeds(
+        info.event().getHook().sendMessageEmbeds(
                 new EmbedBuilder()
                         .setColor(Color.decode("#89F27B"))
                         .setTitle("Verified")
                         .setDescription("Welcome to the course!")
                         .build()
-        ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+        ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
         TextChannel channel = Objects.requireNonNull(info.event().getGuild()).getTextChannelById((long)
                 LearnSpigotConstant.CHANNEL_GENERAL_ID.get());
         assert channel != null;

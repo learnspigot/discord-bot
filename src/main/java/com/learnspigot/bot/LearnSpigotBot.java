@@ -1,6 +1,7 @@
 package com.learnspigot.bot;
 
 import com.learnspigot.bot.framework.command.CommandHandler;
+import com.learnspigot.bot.other.command.commission.CommissionCommand;
 import com.learnspigot.bot.other.command.suggest.SuggestCommand;
 import com.learnspigot.bot.other.command.wixstock.WixStockCommand;
 import com.learnspigot.bot.udemy.lecture.UdemyLectureHandler;
@@ -8,6 +9,8 @@ import com.learnspigot.bot.verification.VerificationHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
@@ -27,10 +30,25 @@ public final class LearnSpigotBot {
         verificationHandler = new VerificationHandler(this);
         udemyLectureHandler = new UdemyLectureHandler(this);
 
-        commandHandler.registerCommands(new SuggestCommand(), new WixStockCommand());
+        commandHandler.registerCommands(new CommissionCommand(), new SuggestCommand(), new WixStockCommand());
+
+        preventTalking();
     }
 
-    public void test() throws IOException {
+    private void preventTalking() {
+        jda.addEventListener(new ListenerAdapter() {
+            @Override
+            public void onMessageReceived(final @NotNull MessageReceivedEvent event) {
+                if ((event.getChannel().getId().equalsIgnoreCase(LearnSpigotConstant.CHANNEL_SUGGESTIONS_ID.get())
+                        && event.getMessage().getContentRaw().startsWith("/suggest"))
+                        ||
+                        (event.getChannel().getId().equalsIgnoreCase(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get())
+                                && (event.getMessage().getContentRaw().startsWith("/request")
+                                || event.getMessage().getContentRaw().startsWith("/offer")))) {
+                    event.getMessage().delete().queue();
+                }
+            }
+        });
     }
 
     public @NotNull JDA jda() {

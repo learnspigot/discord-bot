@@ -18,33 +18,33 @@ public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandle
     @Command(label = "forceverify", usage = "/forceverify <mentioned-user> <url>", description = "Forcefully verify a user with their profile url.", roleId = 749450748244394094L, log = true)
     public void onManualVerifyCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please enter a valid public profile url.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         Member member = info.optionData().get(0).getAsMember();
         if (member == null) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
                             .setDescription("Please mention a valid user.")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         VerificationProfile potentialProfile = verificationHandler.urlExists(member.getIdLong(), info.args()[1]);
         if (potentialProfile != null) {
-            info.event().replyEmbeds(
+            info.event().getHook().sendMessageEmbeds(
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
@@ -53,19 +53,19 @@ public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandle
                                     + ".")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
-            ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+            ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
             return;
         }
 
         verificationHandler().forceVerify(member.getUser());
 
-        info.event().replyEmbeds(
+        info.event().getHook().sendMessageEmbeds(
                 new EmbedBuilder()
                         .setColor(Color.decode("#89F27B"))
                         .setTitle("Verified")
                         .setDescription("Successfully verified " + member.getAsMention() + ".")
                         .build()
-        ).queue(message -> message.deleteOriginal().queueAfter(15L, TimeUnit.SECONDS));
+        ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));
         TextChannel channel = Objects.requireNonNull(info.event().getGuild()).getTextChannelById((long)
                 LearnSpigotConstant.CHANNEL_GENERAL_ID.get());
         assert channel != null;
