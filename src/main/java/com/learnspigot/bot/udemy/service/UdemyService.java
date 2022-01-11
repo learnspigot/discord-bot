@@ -74,7 +74,7 @@ public final class UdemyService {
         closeConnection();
 
         JsonArray lectures = new JsonArray();
-        for (int i = 1; i <= jsonObject.get("count").getAsInt() / 12; i++) {
+        for (int i = 1; i <= (int) Math.ceil((double) jsonObject.get("count").getAsInt() / 12); i++) {
             establishConnection(LearnSpigotConstant.UDEMY_API_ENDPOINT.get() + "courses/" + LearnSpigotConstant.LEARN_SPIGOT_COURSE_ID.get() + "/public-curriculum-items/?page=" + i);
             assert connection != null;
             JsonParser.parseReader(new BufferedReader(new InputStreamReader(connection.getInputStream()))).getAsJsonObject().get("results").getAsJsonArray().forEach(jsonElement -> {
