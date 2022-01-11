@@ -3,6 +3,7 @@ package com.learnspigot.bot.other.command.profile;
 import com.learnspigot.bot.framework.command.Command;
 import com.learnspigot.bot.framework.command.CommandInfo;
 import com.learnspigot.bot.udemy.account.UdemyAccount;
+import com.learnspigot.bot.udemy.course.UdemyCourse;
 import com.learnspigot.bot.verification.VerificationHandler;
 import com.learnspigot.bot.verification.profile.VerificationProfile;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -57,11 +58,16 @@ public record ProfileCommand(@NotNull VerificationHandler verificationHandler) {
         }
 
         UdemyAccount account = profile.udemyAccount();
-
         StringBuilder courses = new StringBuilder();
-        account.courses().forEach(course -> {
-            courses.append("• [").append(course.title()).append("](").append(course.url()).append(")\n");
-        });
+        for (UdemyCourse course : account.courses()) {
+            StringBuilder courseString = new StringBuilder();
+            courseString.append("• [").append(course.title()).append("](").append(course.url()).append(")\n");
+            if (courses.length() + courseString.length() >= 1013) {
+                courses.append("• & more...");
+                break;
+            }
+            courses.append(courseString);
+        }
 
         info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))

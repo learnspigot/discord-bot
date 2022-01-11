@@ -29,7 +29,7 @@ public final class CommissionCommand {
         char[] lol = new char[description.toCharArray().length];
         char last = ' ';
         int i = 0;
-        for (char c : description.toLowerCase().toCharArray()) {
+        for (char c : description.toCharArray()) {
             lol[i] = c;
             if (last == '\\' && c == 'n') {
                 lol[i-1] = '/';
@@ -72,7 +72,7 @@ public final class CommissionCommand {
         char[] lol = new char[description.toCharArray().length];
         char last = ' ';
         int i = 0;
-        for (char c : description.toLowerCase().toCharArray()) {
+        for (char c : description.toCharArray()) {
             lol[i] = c;
             if (last == '\\' && c == 'n') {
                 lol[i-1] = '/';

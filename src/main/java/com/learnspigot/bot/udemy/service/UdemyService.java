@@ -22,7 +22,6 @@ public final class UdemyService {
     }
 
     private @Nullable HttpsURLConnection connection;
-    private final @NotNull JsonArray lectures = new JsonArray();
 
     private UdemyService() {
 
@@ -54,10 +53,17 @@ public final class UdemyService {
         establishConnection(LearnSpigotConstant.UDEMY_API_ENDPOINT.get() + "users/" + id + "/subscribed-profile-courses/");
         assert connection != null;
 
-        JsonArray jsonArray = JsonParser.parseReader(new BufferedReader(new InputStreamReader(
-                connection.getInputStream()))).getAsJsonObject().get("results").getAsJsonArray();
+        JsonObject jsonObject = JsonParser.parseReader(new BufferedReader(new InputStreamReader(connection.getInputStream()))).getAsJsonObject();
         closeConnection();
-        return jsonArray;
+
+        JsonArray courses = new JsonArray();
+        for (int i = 1; i <= (int) Math.ceil((double) jsonObject.get("count").getAsInt() / 12); i++) {
+            establishConnection(LearnSpigotConstant.UDEMY_API_ENDPOINT.get() + "users/" + id + "/subscribed-profile-courses/?page=" + i);
+            assert connection != null;
+            JsonParser.parseReader(new BufferedReader(new InputStreamReader(connection.getInputStream()))).getAsJsonObject().get("results").getAsJsonArray().forEach(courses::add);
+            closeConnection();
+        }
+        return courses;
     }
 
     public @NotNull JsonArray getLectures() throws IOException {
@@ -66,6 +72,8 @@ public final class UdemyService {
 
         JsonObject jsonObject = JsonParser.parseReader(new BufferedReader(new InputStreamReader(connection.getInputStream()))).getAsJsonObject();
         closeConnection();
+
+        JsonArray lectures = new JsonArray();
         for (int i = 1; i <= jsonObject.get("count").getAsInt() / 12; i++) {
             establishConnection(LearnSpigotConstant.UDEMY_API_ENDPOINT.get() + "courses/" + LearnSpigotConstant.LEARN_SPIGOT_COURSE_ID.get() + "/public-curriculum-items/?page=" + i);
             assert connection != null;

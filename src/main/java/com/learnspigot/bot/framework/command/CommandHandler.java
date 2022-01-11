@@ -121,7 +121,6 @@ public final class CommandHandler extends ListenerAdapter {
         boolean commissionsChannel = event.getChannel().getId().equals(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get());
 
         if ((suggestionsChannel && !event.getName().equals("suggest")) || (commissionsChannel && !(event.getName().equals("request") || event.getName().equals("offer")))) {
-            System.out.println("no here");
             event.getHook().deleteOriginal().queue();
             return;
         }
