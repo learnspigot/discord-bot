@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Optional;
 
 public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHandler) {
     @Command(label = "lecture", usage = "/lecture <title>", description = "Search for a lecture.", log = true)
@@ -22,8 +23,8 @@ public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHand
             return;
         }
 
-        UdemyLecture udemyLecture = udemyLectureHandler().searchLecture(String.join(" ", info.args()));
-        if (udemyLecture.id() == 0L) {
+        Optional<UdemyLecture> optionalLecture = udemyLectureHandler().searchLecture(String.join(" ", info.args()));
+        if (optionalLecture.isEmpty()) {
             info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
@@ -33,11 +34,13 @@ public final record LectureCommand(@NotNull UdemyLectureHandler udemyLectureHand
             return;
         }
 
+        UdemyLecture lecture = optionalLecture.get();
+
         info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
-                .setTitle(udemyLecture.title())
-                .setDescription(udemyLecture.description())
-                .addField("Watch", udemyLecture.url(), false)
+                .setTitle(lecture.title())
+                .setDescription(lecture.description())
+                .addField("Watch", lecture.url(), false)
                 .build()
         ).queue();
     }

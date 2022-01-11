@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -64,18 +65,14 @@ public final class UdemyLectureHandler {
         return Collections.unmodifiableList(quizNames);
     }
 
-    public @NotNull UdemyLecture searchLecture(final @NotNull String string) {
+    public @NotNull Optional<UdemyLecture> searchLecture(final @NotNull String string) {
         SearchResult result = Searcher.instance().searchFor(string, lectureNames);
-        return lectures.stream().filter(lecture -> lecture.title().equals(result.result())).findFirst().orElse(
-                new UdemyLecture(0L, "", ""));
+        return lectures.stream().filter(lecture -> lecture.title().equals(result.result())).findFirst();
     }
 
-    public @NotNull UdemyQuiz searchQuiz(final @NotNull String string) {
-        System.out.println(quizNames);
+    public @NotNull Optional<UdemyLecture> searchQuiz(final @NotNull String string) {
         SearchResult result = Searcher.instance().searchFor(string, quizNames);
-        System.out.println(result);
-        return (UdemyQuiz) lectures.stream().filter(lecture -> lecture.title().equals(result.result())).findFirst().orElse(
-                new UdemyQuiz(0L, "", "", 0));
+        return lectures.stream().filter(lecture -> lecture.title().equals(result.result())).findFirst();
     }
 
     private @NotNull String format(final @NotNull String string) {

@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandler) {
-    @Command(label = "forceverify", usage = "/forceverify <mentioned-user> <url>", description = "Forcefully verify a user with their profile url.", roleId = 0L, log = true)
+    @Command(label = "forceverify", usage = "/forceverify <mentioned-user> <url>", description = "Forcefully verify a user with their profile url.", roleId = 929465000379187230L, log = true)
     public void onManualVerifyCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
             info.event().getHook().sendMessageEmbeds(

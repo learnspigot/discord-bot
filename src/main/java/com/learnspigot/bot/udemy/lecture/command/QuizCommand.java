@@ -2,12 +2,14 @@ package com.learnspigot.bot.udemy.lecture.command;
 
 import com.learnspigot.bot.framework.command.Command;
 import com.learnspigot.bot.framework.command.CommandInfo;
+import com.learnspigot.bot.udemy.lecture.UdemyLecture;
 import com.learnspigot.bot.udemy.lecture.UdemyLectureHandler;
 import com.learnspigot.bot.udemy.lecture.UdemyQuiz;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Optional;
 
 public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler) {
     @Command(label = "quiz", usage = "/quiz <title>", description = "Search for a quiz.", log = true)
@@ -22,8 +24,8 @@ public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler
             return;
         }
 
-        UdemyQuiz udemyQuiz = udemyLectureHandler().searchQuiz(String.join(" ", info.args()));
-        if (udemyQuiz.id() == 0L) {
+        Optional<UdemyLecture> optionalQuiz = udemyLectureHandler().searchQuiz(String.join(" ", info.args()));
+        if (optionalQuiz.isEmpty()) {
             info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                     .setColor(Color.decode("#E95151"))
                     .setTitle("Error")
@@ -33,11 +35,13 @@ public final record QuizCommand(@NotNull UdemyLectureHandler udemyLectureHandler
             return;
         }
 
+        UdemyQuiz quiz = (UdemyQuiz) optionalQuiz.get();
+
         info.event().getHook().sendMessageEmbeds(new EmbedBuilder()
                 .setColor(Color.decode("#EE8917"))
-                .setTitle(udemyQuiz.title())
-                .setDescription("To pass this you need to get at least " + udemyQuiz.passPercentage() + "%")
-                .addField("Take Quiz", udemyQuiz.url(), false)
+                .setTitle(quiz.title())
+                .setDescription("To pass this you need to get at least " + quiz.passPercentage() + "%")
+                .addField("Take Quiz", quiz.url(), false)
                 .build()
         ).queue();
     }

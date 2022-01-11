@@ -111,7 +111,7 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
         channel.sendMessage(info.author().getAsMention()).queue(message -> message.delete().queue());
     }
 
-    @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 0L, log = true)
+    @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 929465000379187230L, log = true)
     public void onVerifyOtherCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
             info.event().getHook().sendMessageEmbeds(
@@ -146,9 +146,8 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
                     new EmbedBuilder()
                             .setColor(Color.decode("#E95151"))
                             .setTitle("Error")
-                            .setDescription("This Udemy account is already linked to " + Objects.requireNonNull(
-                                    verificationHandler.bot().jda().getUserById(potentialProfile.id())).getAsMention()
-                                    + ".")
+                            .setDescription("This Udemy account is already linked to " + "<@" + potentialProfile.id()
+                                    + ">")
                             .addField("Confused?", "You shouldn't be, you're staff.", false)
                             .build()
             ).queue(message -> message.delete().queueAfter(15L, TimeUnit.SECONDS));

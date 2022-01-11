@@ -47,7 +47,7 @@ public final class CommissionCommand {
                 .addField("Offer by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 
-        if (info.args().length >= 2) {
+        if (info.optionData().size() >= 2) {
             embed.setImage(info.optionData().get(1).getAsString());
         }
 
@@ -90,7 +90,7 @@ public final class CommissionCommand {
                 .addField("Request by", info.author().getAsMention(), false)
                 .setFooter("Directly contact the user to find out more. Want to make your own post? Use /request or /offer.");
 
-        if (info.args().length >= 2) {
+        if (info.optionData().size() >= 2) {
             embed.setImage(info.optionData().get(1).getAsString());
         }
 

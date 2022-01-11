@@ -51,7 +51,7 @@ public final class LearnSpigotBot {
                         || event.getMessage().getContentRaw().equals("");
 
                 if ((suggestionsChannel && !suggestCommand) || (commissionsChannel && !requestOrOfferCommand)) {
-                    System.out.println("gottem");
+                    System.out.println("here");
                     event.getMessage().delete().queue();
                 }
             }

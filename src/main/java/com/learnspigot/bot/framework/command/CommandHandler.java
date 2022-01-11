@@ -98,9 +98,6 @@ public final class CommandHandler extends ListenerAdapter {
                     args[i].substring(1, args[i].length() - 1), args[i].startsWith("<")));
         }
 
-        System.out.println(label);
-        System.out.println(command);
-
         CommandData commandData = new CommandData(label, command.description());
         commandData.setDefaultEnabled(command.roleId() == 0);
 
@@ -115,12 +112,19 @@ public final class CommandHandler extends ListenerAdapter {
                         new CommandPrivilege(CommandPrivilege.Type.ROLE, true, command.roleId())).queue();
             }
         });
-        guild.retrieveCommands().queue((System.out::println));
     }
 
     @Override
     public void onSlashCommand(final @NotNull SlashCommandEvent event) {
         event.deferReply().queue();
+        boolean suggestionsChannel = event.getChannel().getId().equals(LearnSpigotConstant.CHANNEL_SUGGESTIONS_ID.get());
+        boolean commissionsChannel = event.getChannel().getId().equals(LearnSpigotConstant.CHANNEL_COMMISSIONS_ID.get());
+
+        if ((suggestionsChannel && !event.getName().equals("suggest")) || (commissionsChannel && !(event.getName().equals("request") || event.getName().equals("offer")))) {
+            System.out.println("no here");
+            event.getHook().deleteOriginal().queue();
+            return;
+        }
         handleCommand(event);
     }
 
