@@ -1,4 +1,4 @@
-# `learnspigot-bot`
+# `discord-bot`
 Discord bot for LearnSpigot.
 
 ## Features
