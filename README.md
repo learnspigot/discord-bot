@@ -31,6 +31,6 @@ Allows a user to make an offer in #commissions.
 Request usage `/suggest <idea>`<br>
 Allows a user to make a suggestion in #suggestions.
 
-### Wix Sticks
+### Wix Stocks
 Wix stocks usage `/wixstocks`<br>
 Allows a user to view real-time data about Wix stocks.
