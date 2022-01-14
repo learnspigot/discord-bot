@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public final class UdemyLectureHandler {
@@ -24,8 +24,9 @@ public final class UdemyLectureHandler {
     private final @NotNull List<String> quizNames = new ArrayList<>();
     private final @NotNull UdemyService udemyService = UdemyService.instance();
 
-    public UdemyLectureHandler(final @NotNull LearnSpigotBot bot) {
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::update, 0L, 1L,
+    public UdemyLectureHandler(final @NotNull LearnSpigotBot bot,
+                               final @NotNull ScheduledExecutorService scheduledExecutorService) {
+        scheduledExecutorService.scheduleAtFixedRate(this::update, 0L, 1L,
                 TimeUnit.HOURS);
         bot.commandHandler().registerCommands(new LectureCommand(this),
                 new QuizCommand(this));

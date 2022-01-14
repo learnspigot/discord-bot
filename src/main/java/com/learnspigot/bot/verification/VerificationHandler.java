@@ -17,15 +17,18 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
 
 public final class VerificationHandler {
     private final @NotNull LearnSpigotBot bot;
     private final @NotNull Set<VerificationProfile> profiles = new HashSet<>();
-    private final @NotNull ProfileData profileData = new ProfileData();
+    private final @NotNull ProfileData profileData;
     private final @NotNull UdemyService udemyService = UdemyService.instance();
 
-    public VerificationHandler(final @NotNull LearnSpigotBot bot) throws IOException {
+    public VerificationHandler(final @NotNull LearnSpigotBot bot,
+                               final @NotNull ScheduledExecutorService scheduledExecutorService) throws IOException {
         this.bot = bot;
+        this.profileData = new ProfileData(scheduledExecutorService);
         bot.commandHandler().registerCommands(new VerifyCommand(this),
                 new ForceVerifyCommand(this));
         loadProfiles();

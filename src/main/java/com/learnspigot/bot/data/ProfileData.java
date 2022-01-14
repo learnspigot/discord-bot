@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public final class ProfileData {
@@ -18,11 +18,11 @@ public final class ProfileData {
     private final @NotNull Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private @NotNull final JsonArray data;
 
-    public ProfileData() throws IOException {
+    public ProfileData(final @NotNull ScheduledExecutorService scheduledExecutorService) throws IOException {
         new File(name).createNewFile();
         JsonElement fileData = JsonParser.parseReader(Files.newBufferedReader(Paths.get(name)));
         data = fileData.toString().equals("null") ? new JsonArray() : fileData.getAsJsonArray();
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::write, 15L, 15L,
+        scheduledExecutorService.scheduleAtFixedRate(this::write, 15L, 15L,
                 TimeUnit.SECONDS);
     }
 

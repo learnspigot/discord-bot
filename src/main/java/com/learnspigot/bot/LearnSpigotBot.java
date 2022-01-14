@@ -1,6 +1,9 @@
 package com.learnspigot.bot;
 
 import com.learnspigot.bot.framework.command.CommandHandler;
+import com.learnspigot.bot.minecraft.CodeHandler;
+import com.learnspigot.bot.minecraft.command.VerifyMCCommand;
+import com.learnspigot.bot.mongo.MongoDatabase;
 import com.learnspigot.bot.other.command.commission.CommissionCommand;
 import com.learnspigot.bot.other.command.embed.EmbedCommand;
 import com.learnspigot.bot.other.command.profile.ProfileCommand;
@@ -17,23 +20,30 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public final class LearnSpigotBot {
     private final @NotNull JDA jda;
     private final @NotNull CommandHandler commandHandler;
     private final @NotNull VerificationHandler verificationHandler;
     private final @NotNull UdemyLectureHandler udemyLectureHandler;
+    private final @NotNull CodeHandler codeHandler;
 
     public LearnSpigotBot() throws LoginException, InterruptedException, IOException {
         jda = JDABuilder.createDefault(LearnSpigotConstant.BOT_TOKEN.get()).setActivity(Activity.watching(
                 LearnSpigotConstant.ACTIVITY.get())).build().awaitReady();
 
+        MongoDatabase mongoDatabase = new MongoDatabase(LearnSpigotConstant.MONGO_DATABASE_URI.get());
+
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         commandHandler = new CommandHandler(this);
-        verificationHandler = new VerificationHandler(this);
-        udemyLectureHandler = new UdemyLectureHandler(this);
+        verificationHandler = new VerificationHandler(this, scheduledExecutorService);
+        udemyLectureHandler = new UdemyLectureHandler(this, scheduledExecutorService);
+        codeHandler = new CodeHandler(scheduledExecutorService, mongoDatabase.getCollection("codes"));
 
         commandHandler.registerCommands(new CommissionCommand(), new SuggestCommand(), new WixStockCommand(),
-                new ProfileCommand(verificationHandler), new EmbedCommand());
+                new ProfileCommand(verificationHandler), new EmbedCommand(), new VerifyMCCommand(codeHandler));
 
         preventTalking();
     }
@@ -71,5 +81,9 @@ public final class LearnSpigotBot {
 
     public @NotNull UdemyLectureHandler udemyLectureHandler() {
         return udemyLectureHandler;
+    }
+
+    public @NotNull CodeHandler codeHandler() {
+        return codeHandler;
     }
 }
