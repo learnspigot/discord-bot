@@ -70,11 +70,12 @@ public final class VerificationHandler {
         return profiles.stream().filter(profile -> profile.id() == id).findFirst();
     }
 
-    public void forceVerify(final @NotNull User user) {
+    public @NotNull VerificationProfile forceVerify(final @NotNull User user) {
         VerificationProfile verificationProfile = new VerificationProfile(user.getIdLong(), user.getName());
         verificationProfile.verified(true);
         profiles.add(verificationProfile);
         profileData.cache(verificationProfile);
+        return verificationProfile;
     }
 
     public @Nullable VerificationProfile urlExists(final long id, final @NotNull String url) {

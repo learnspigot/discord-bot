@@ -6,7 +6,7 @@
 
     <groupId>com.learnspigot.bot</groupId>
     <artifactId>LearnSpigotBot</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <build>
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>clean install</defaultGoal>
