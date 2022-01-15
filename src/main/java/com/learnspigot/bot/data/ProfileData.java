@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 public final class ProfileData {
     private final @NotNull String name = "profiles.json";
     private final @NotNull Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private @NotNull final JsonArray data;
+    private @NotNull
+    final JsonArray data;
 
     public ProfileData(final @NotNull ScheduledExecutorService scheduledExecutorService) throws IOException {
         new File(name).createNewFile();

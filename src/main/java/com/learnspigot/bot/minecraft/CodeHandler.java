@@ -1,6 +1,5 @@
 package com.learnspigot.bot.minecraft;
 
-import com.learnspigot.bot.data.ProfileData;
 import com.learnspigot.bot.minecraft.packet.PacketHandler;
 import com.learnspigot.bot.verification.VerificationHandler;
 import com.learnspigot.bot.verification.profile.VerificationProfile;

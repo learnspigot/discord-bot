@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +32,7 @@ public final class SuggestCommand {
         for (char c : description.toCharArray()) {
             lol[i] = c;
             if (last == '\\' && c == 'n') {
-                lol[i-1] = '/';
+                lol[i - 1] = '/';
                 lol[i] = '%';
             }
             last = c;

@@ -74,11 +74,11 @@ public record ProfileCommand(@NotNull VerificationHandler verificationHandler) {
                 .setTitle("Profile Lookup")
                 .addField("Discord", profile.name() + " (" + user.getAsMention() + ")", false)
                 .addField("Minecraft", (profile.minecraftAccount() == null ? "Not linked" :
-                        "[" + profile.minecraftAccount().name() + "](https://namemc.com/" +
-                                profile.minecraftAccount().uid() + ") (" + profile.minecraftAccount().uid() + ")"),
+                                "[" + profile.minecraftAccount().name() + "](https://namemc.com/" +
+                                        profile.minecraftAccount().uid() + ") (" + profile.minecraftAccount().uid() + ")"),
                         false)
                 .addField("Udemy", "[" + account.displayName() + "](" + account.url() + ")" +
-                        " (" +account.id() + ")\nCourses:\n" + courses, false)
+                        " (" + account.id() + ")\nCourses:\n" + courses, false)
                 .setThumbnail(account.avatarURL())
                 .build()
         ).queue();

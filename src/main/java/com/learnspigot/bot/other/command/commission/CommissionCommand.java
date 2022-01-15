@@ -32,7 +32,7 @@ public final class CommissionCommand {
         for (char c : description.toCharArray()) {
             lol[i] = c;
             if (last == '\\' && c == 'n') {
-                lol[i-1] = '/';
+                lol[i - 1] = '/';
                 lol[i] = '%';
             }
             last = c;
@@ -75,7 +75,7 @@ public final class CommissionCommand {
         for (char c : description.toCharArray()) {
             lol[i] = c;
             if (last == '\\' && c == 'n') {
-                lol[i-1] = '/';
+                lol[i - 1] = '/';
                 lol[i] = '%';
             }
             last = c;

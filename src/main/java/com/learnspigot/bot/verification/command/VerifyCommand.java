@@ -222,7 +222,7 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
                 .build()
         ).queue();
         info.event().getGuild().addRoleToMember(member,
-                Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
+                        Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
                 .queue();
         channel.sendMessage(user.getAsMention()).queue(message -> message.delete().queue());
     }
