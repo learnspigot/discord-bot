@@ -62,7 +62,7 @@ public record ProfileCommand(@NotNull VerificationHandler verificationHandler) {
         for (UdemyCourse course : account.courses()) {
             StringBuilder courseString = new StringBuilder();
             courseString.append("• [").append(course.title()).append("](").append(course.url()).append(")\n");
-            if (courses.length() + courseString.length() >= 1013) {
+            if (courses.length() + courseString.length() >= 950) {
                 courses.append("• & more...");
                 break;
             }
