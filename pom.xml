@@ -6,32 +6,15 @@
 
     <groupId>com.learnspigot.bot</groupId>
     <artifactId>LearnSpigotBot</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.1</version>
     <build>
+        <finalName>${project.artifactId}</finalName>
         <defaultGoal>clean install</defaultGoal>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/resources/</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>17</source>
                     <target>17</target>
@@ -40,22 +23,24 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <shadedArtifactAttached>false</shadedArtifactAttached>
-                </configuration>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <finalName>${project.artifactId}</finalName>
-                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -88,19 +73,19 @@
         <dependency>
             <groupId>dev.devous.searcher</groupId>
             <artifactId>Searcher</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>dev.devous.electron</groupId>
             <artifactId>Electron</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <version>2.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>dev.devous.barter</groupId>
             <artifactId>Barter</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
