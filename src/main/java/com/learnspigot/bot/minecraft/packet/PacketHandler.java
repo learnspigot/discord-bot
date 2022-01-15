@@ -4,7 +4,7 @@ import com.learnspigot.bot.minecraft.CodeHandler;
 import dev.devous.electron.Packet;
 import org.jetbrains.annotations.NotNull;
 
-public record PacketHandler(@NotNull CodeHandler codeHandler) implements dev.devous.electron.PacketHandler {
+public record PacketHandler(@NotNull CodeHandler codeHandler) implements dev.devous.electron.handler.PacketHandler {
     @Override
     public void handle(final @NotNull Packet packet) {
         if (packet.header().equals("EXPIRED")) {
