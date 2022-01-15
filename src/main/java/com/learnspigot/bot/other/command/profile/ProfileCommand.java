@@ -73,8 +73,12 @@ public record ProfileCommand(@NotNull VerificationHandler verificationHandler) {
                 .setColor(Color.decode("#EE8917"))
                 .setTitle("Profile Lookup")
                 .addField("Discord", profile.name() + " (" + user.getAsMention() + ")", false)
-                .addField("Udemy", "[" + account.displayName() + "](" + account.url() + ")" + " (" + account.id() + ")", true)
-                .addField("Courses", courses.toString(), false)
+                .addField("Minecraft", (profile.minecraftAccount() == null ? "Not linked" :
+                        "[" + profile.minecraftAccount().name() + "](https://namemc.com/" +
+                                profile.minecraftAccount().uid() + ") (" + profile.minecraftAccount().uid() + ")"),
+                        false)
+                .addField("Udemy", "[" + account.displayName() + "](" + account.url() + ")" +
+                        " (" +account.id() + ")\nCourses:\n" + courses, false)
                 .setThumbnail(account.avatarURL())
                 .build()
         ).queue();

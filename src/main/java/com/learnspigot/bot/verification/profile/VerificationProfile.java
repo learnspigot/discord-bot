@@ -1,6 +1,7 @@
 package com.learnspigot.bot.verification.profile;
 
 import com.learnspigot.bot.LearnSpigotConstant;
+import com.learnspigot.bot.minecraft.account.MinecraftAccount;
 import com.learnspigot.bot.udemy.account.UdemyAccount;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +12,8 @@ public final class VerificationProfile {
 
     private @Nullable UdemyAccount udemyAccount;
     private boolean verified;
+
+    private @Nullable MinecraftAccount minecraftAccount;
 
     public VerificationProfile(final long id, final @NotNull String name) {
         this.id = id;
@@ -39,6 +42,14 @@ public final class VerificationProfile {
 
     public void verified(boolean verified) {
         this.verified = verified;
+    }
+
+    public @Nullable MinecraftAccount minecraftAccount() {
+        return minecraftAccount;
+    }
+
+    public void minecraftAccount(@NotNull MinecraftAccount minecraftAccount) {
+        this.minecraftAccount = minecraftAccount;
     }
 
     public boolean ownsCourse() {

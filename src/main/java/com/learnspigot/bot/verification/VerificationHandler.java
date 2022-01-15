@@ -96,4 +96,8 @@ public final class VerificationHandler {
     public @NotNull LearnSpigotBot bot() {
         return bot;
     }
+
+    public @NotNull ProfileData profileData() {
+        return profileData;
+    }
 }

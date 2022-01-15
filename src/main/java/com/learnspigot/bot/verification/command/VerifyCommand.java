@@ -108,6 +108,9 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
                 .setDescription("Please welcome " + info.author().getAsMention() + " as a student! ❤")
                 .build()
         ).queue();
+        info.event().getGuild().addRoleToMember(Objects.requireNonNull(info.member()),
+                        Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
+                .queue();
         channel.sendMessage(info.author().getAsMention()).queue(message -> message.delete().queue());
     }
 
@@ -218,6 +221,9 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
                 .setDescription("Please welcome " + user.getAsMention() + " as a student! ❤")
                 .build()
         ).queue();
+        info.event().getGuild().addRoleToMember(member,
+                Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
+                .queue();
         channel.sendMessage(user.getAsMention()).queue(message -> message.delete().queue());
     }
 }

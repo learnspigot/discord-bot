@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record PacketHandler(@NotNull CodeHandler codeHandler) implements dev.devous.electron.PacketHandler {
     @Override
-    public void handle(@NotNull Packet packet) {
+    public void handle(final @NotNull Packet packet) {
         if (packet.header().equals("EXPIRED")) {
             codeHandler.removeIfExists(Integer.parseInt(packet.content()));
             return;

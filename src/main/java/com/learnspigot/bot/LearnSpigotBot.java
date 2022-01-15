@@ -11,6 +11,7 @@ import com.learnspigot.bot.other.command.suggest.SuggestCommand;
 import com.learnspigot.bot.other.command.wixstock.WixStockCommand;
 import com.learnspigot.bot.udemy.lecture.UdemyLectureHandler;
 import com.learnspigot.bot.verification.VerificationHandler;
+import dev.devous.barter.Barter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -26,6 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public final class LearnSpigotBot {
     private final @NotNull JDA jda;
     private final @NotNull CommandHandler commandHandler;
+    private final @NotNull Barter barter;
     private final @NotNull VerificationHandler verificationHandler;
     private final @NotNull UdemyLectureHandler udemyLectureHandler;
     private final @NotNull CodeHandler codeHandler;
@@ -38,12 +40,15 @@ public final class LearnSpigotBot {
 
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         commandHandler = new CommandHandler(this);
+        barter = new Barter(scheduledExecutorService);
         verificationHandler = new VerificationHandler(this, scheduledExecutorService);
         udemyLectureHandler = new UdemyLectureHandler(this, scheduledExecutorService);
-        codeHandler = new CodeHandler(scheduledExecutorService, mongoDatabase.getCollection("codes"));
+        codeHandler = new CodeHandler(scheduledExecutorService, mongoDatabase.getCollection("codes"),
+                verificationHandler);
 
         commandHandler.registerCommands(new CommissionCommand(), new SuggestCommand(), new WixStockCommand(),
-                new ProfileCommand(verificationHandler), new EmbedCommand(), new VerifyMCCommand(codeHandler));
+                new ProfileCommand(verificationHandler), new EmbedCommand(),
+                new VerifyMCCommand(verificationHandler, codeHandler, barter));
 
         preventTalking();
     }
@@ -73,6 +78,10 @@ public final class LearnSpigotBot {
 
     public @NotNull CommandHandler commandHandler() {
         return commandHandler;
+    }
+
+    public @NotNull Barter barter() {
+        return barter;
     }
 
     public @NotNull VerificationHandler verificationHandler() {

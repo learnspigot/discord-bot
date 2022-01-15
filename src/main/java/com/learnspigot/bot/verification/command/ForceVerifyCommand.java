@@ -76,6 +76,9 @@ public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandle
                 .setDescription("Please welcome " + member.getAsMention() + " as a student! ❤")
                 .build()
         ).queue();
+        info.event().getGuild().addRoleToMember(member,
+                        Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
+                .queue();
         channel.sendMessage(member.getAsMention()).queue(message -> message.delete().queue());
     }
 }
