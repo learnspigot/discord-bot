@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandler) {
-    @Command(label = "forceverify", usage = "/forceverify <mentioned-user> <url>", description = "Forcefully verify a user with their profile url.", roleId = 929465000379187230L, log = true)
+    @Command(label = "forceverify", usage = "/forceverify <mentioned-user> <url>", description = "Forcefully verify a user with their profile url.", roleId = 749450748244394094L, log = true)
     public void onManualVerifyCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
             info.event().getHook().sendMessageEmbeds(
@@ -76,8 +76,8 @@ public record ForceVerifyCommand(@NotNull VerificationHandler verificationHandle
                 .setDescription("Please welcome " + member.getAsMention() + " as a student! ❤")
                 .build()
         ).queue();
-        info.event().getGuild().addRoleToMember(member,
-                        Objects.requireNonNull(info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
+        info.event().getGuild().addRoleToMember(member, Objects.requireNonNull(
+                        info.event().getGuild().getRoleById(LearnSpigotConstant.ROLE_STUDENT_ID.get())))
                 .queue();
         channel.sendMessage(member.getAsMention()).queue(message -> message.delete().queue());
     }

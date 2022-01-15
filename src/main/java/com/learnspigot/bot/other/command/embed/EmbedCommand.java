@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 
 public final class EmbedCommand {
-    @Command(label = "embed", usage = "/embed <channel> <hex-color> <title> <description> [thumbnail]", description = "Post an embed", log = true)
+    @Command(label = "embed", usage = "/embed <channel> <hex-color> <title> <description> [thumbnail]", description = "Post an embed", roleId = 790695546704494643L, log = true)
     public void onEmbedCommand(final @NotNull CommandInfo info) {
         MessageChannel channel = info.optionData().get(0).getAsMessageChannel();
         if (channel == null) {

@@ -114,7 +114,7 @@ public record VerifyCommand(@NotNull VerificationHandler verificationHandler) {
         channel.sendMessage(info.author().getAsMention()).queue(message -> message.delete().queue());
     }
 
-    @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 929465000379187230L, log = true)
+    @Command(label = "verifyother", usage = "/verifyother <mentioned-user> <url>", description = "Verify another user with their url.", roleId = 749450748244394094L, log = true)
     public void onVerifyOtherCommand(final @NotNull CommandInfo info) {
         if (!info.args()[1].matches(LearnSpigotConstant.VALID_LINK_REGEX.get()) || !info.args()[1].contains("udemy.com/user/")) {
             info.event().getHook().sendMessageEmbeds(
